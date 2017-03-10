@@ -1,0 +1,11 @@
+This script shows you how to open, modify and save images using OpenCV.
+
+It takes a path to a jpeg file as an argument.
+
+It then opens the file using imread(). 
+
+Next, the script converts the color image to a grayscale using cvtColor().
+
+Next, the script saves it in your current directory using imwrite(), and then displays both versions like we did in DisplayImage.
+
+Then it waits for user to press the '0' (zero) key to exit.

@@ -1,0 +1,3 @@
+/home/pi/Flo_eyes/tutorials/colorToGray/CMakeFiles/rebuild_cache.dir
+/home/pi/Flo_eyes/tutorials/colorToGray/CMakeFiles/edit_cache.dir
+/home/pi/Flo_eyes/tutorials/colorToGray/CMakeFiles/colorToGray.dir
