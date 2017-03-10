@@ -1,3 +1,0 @@
-/home/pi/Flo_eyes/tutorials/DisplayImage/CMakeFiles/edit_cache.dir
-/home/pi/Flo_eyes/tutorials/DisplayImage/CMakeFiles/rebuild_cache.dir
-/home/pi/Flo_eyes/tutorials/DisplayImage/CMakeFiles/DisplayImage.dir

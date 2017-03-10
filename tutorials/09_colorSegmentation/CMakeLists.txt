@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 2.8)
+project( colorSegmentation )
+find_package( OpenCV REQUIRED )
+add_executable( colorSegmentation src/colorSegmentation.cpp )
+add_definitions(-std=c++0x)
+target_link_libraries( colorSegmentation ${OpenCV_LIBS} )

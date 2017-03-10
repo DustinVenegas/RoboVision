@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 2.8)
+project( imageCapture )
+find_package( OpenCV REQUIRED )
+add_executable( imageCapture imageCapture.cpp )
+add_definitions(-std=c++0x)
+target_link_libraries( imageCapture ${OpenCV_LIBS} )

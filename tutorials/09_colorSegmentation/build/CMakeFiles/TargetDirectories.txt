@@ -1,0 +1,3 @@
+/home/pi/RoboVision/tutorials/09_colorSegmentation/build/CMakeFiles/edit_cache.dir
+/home/pi/RoboVision/tutorials/09_colorSegmentation/build/CMakeFiles/rebuild_cache.dir
+/home/pi/RoboVision/tutorials/09_colorSegmentation/build/CMakeFiles/colorSegmentation.dir
