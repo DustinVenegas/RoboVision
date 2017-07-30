@@ -4,6 +4,7 @@ lib/*
 
 # ignore executables
 bin/*
+*/roboVision
 
 # ignore Mac-specific file stuff:
 .DS_Store
