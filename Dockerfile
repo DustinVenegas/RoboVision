@@ -19,7 +19,6 @@ RUN mkdir -p opencv/release; cd opencv/release; \
 # create working directory
 WORKDIR /app
 ADD . /app
-RUN cd /app/build; cmake ..; make
+RUN cd  /app/build; cmake -DCMAKE_INSTALL_PREFIX=/opencv/release ..; make
 
-
-CMD ["/app/roboVision"]
+CMD ["/app/build/roboVision"]

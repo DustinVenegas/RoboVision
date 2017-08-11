@@ -45,7 +45,8 @@ int main(int argc, char** argv) {
         printf("Camera not operational\n");
         return -1;
     }
-    
+    printf("Camera operational\n");
+
     if (debugFlag) {
         namedWindow(windowName, WINDOW_AUTOSIZE);
     }
