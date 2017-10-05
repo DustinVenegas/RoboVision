@@ -1,14 +1,11 @@
 # First attempt. Don't judge me too harshly
 
-FROM ubuntu
+FROM alpine
 
 MAINTAINER Derek 
 
-RUN apt-get update; \
-    apt-get -y upgrade
-
 # install tools
-RUN apt-get -y install g++ cmake git
+RUN apk add --update alpine-sdk
 
 # install opencv
 RUN git clone https://github.com/opencv/opencv.git; cd opencv
@@ -19,6 +16,6 @@ RUN mkdir -p opencv/release; cd opencv/release; \
 # create working directory
 WORKDIR /app
 ADD . /app
-RUN cd  /app/build; cmake -DCMAKE_INSTALL_PREFIX=/opencv/release ..; make
+RUN cd  /app/build; cmake -D CMAKE_INSTALL_PREFIX=/opencv/release ..; make
 
 CMD ["/app/build/roboVision"]
