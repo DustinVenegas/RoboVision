@@ -11,5 +11,5 @@ bin/*
 .DS_Store
 
 # ignore Cmake stuff:
-CMakeFiles/
+CMakeFiles/*
 CMakeCache.txt

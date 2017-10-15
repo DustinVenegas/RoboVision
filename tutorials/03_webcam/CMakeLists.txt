@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 project( webcam )
+set(OpenCV_DIR /Users/Mastermind/C_Shit/opencv/build/)
 find_package( OpenCV REQUIRED )
 add_executable( webcam webcam.cpp )
 target_link_libraries( webcam ${OpenCV_LIBS} )
