@@ -8,14 +8,17 @@ MAINTAINER Derek
 RUN apk add --update alpine-sdk cmake
 
 # install opencv
-RUN git clone https://github.com/opencv/opencv.git; cd opencv
-RUN mkdir -p opencv/release; cd opencv/release; \
+RUN git clone https://github.com/opencv/opencv.git; cd opencv && \
+    mkdir -p opencv/release; cd opencv/release; \
     cmake -D CMAKE_BUILD_TYPE=release ..; \
     make
 
 # create working directory
 WORKDIR /app
 ADD . /app
-RUN cd  /app/build; cmake -D CMAKE_INSTALL_PREFIX=/opencv/release ..; make
+RUN cd  /app/build && \
+    ./makeCMakeLists.sh roboVision && \
+    cmake -D CMAKE_INSTALL_PREFIX=/opencv/release .. && \
+    make
 
 CMD ["/app/build/roboVision"]
