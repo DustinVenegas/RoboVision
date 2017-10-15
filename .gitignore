@@ -12,4 +12,5 @@ bin/*
 
 # ignore Cmake stuff:
 **/CMakeFiles
+**/Makefile
 CMakeCache.txt
