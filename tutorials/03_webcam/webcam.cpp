@@ -1,8 +1,8 @@
 // grabs a frame from a connected webcam and displays it.
 // stolen from thefreecoder.wordpress.com/2012/09/11/opencv-c-video-capture/
-#include <opencv2/highgui/highgui.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
-#include <opencv2/opencv.hpp>
+#include <opencv/highgui/highgui.hpp>
+#include <opencv/imgproc/imgproc.hpp>
+#include <opencv/opencv.hpp>
 #include <iostream>
 
 using namespace cv;

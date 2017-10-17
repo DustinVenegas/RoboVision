@@ -4,6 +4,9 @@
 using namespace cv;
 using namespace std;
 
+
+Hand::Hand(){}
+
 Hand::Hand(vector<Point> contour,
            vector<int> convexIndexes,
            vector<Vec4i> defects)

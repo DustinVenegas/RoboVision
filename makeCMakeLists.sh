@@ -1,17 +1,54 @@
 #!/usr/bin/env bash
 # an automated way to make CMakeLists, because I'm lazy:
+
 if [ $# -eq 0 ]
     then
         echo 'No Project name specified'
     else
-        file=CMakeLists.txt
-        opencv_location=$(echo $HOME/opencv)
-        printf 'cmake_minimum_required(VERSION 2.8)\n' >> $file
-        printf "project( $1 )\n" >> $file
-        printf "set(OpenCV_DIR $opencv_location)\n" >> $file
-        printf 'find_package( OpenCV REQUIRED )\n' >> $file
-        printf "add_executable( $1 src/$1.cpp )\n" >> $file
-        printf "add_definitions(-std=c++0x)\n" >> $file
-        printf "target_link_libraries( $1" >> $file
-        printf ' ${OpenCV_LIBS} )\n'  >> $file
+        while [[ $# -gt 0 ]]
+        do
+            key="$1"
+
+            case $key in
+                -n|--name)
+                PROJECT="$2"
+                shift
+                shift
+                ;;
+                -r|--release)
+                PROJECT="roboVision"
+                shift
+                ;;
+            esac
+        done
+        
+        if [ -z $PROJECT ]
+            then
+                echo "Project name not set"
+                exit 1
+        fi
+        
+        FILE=CMakeLists.txt
+        if [ -e $FILE ]
+            then
+                rm $FILE
+        fi
+
+        OPENCV_LOCATION="$HOME/opencv/build"
+        if [ $PROJECT == roboVision ]
+            then
+                printf 'file (GLOB SOURCES\n    src/*.cpp\n)\n' >> $FILE
+        fi
+        printf 'cmake_minimum_required(VERSION 2.8)\n' >> $FILE
+        printf "project( $PROJECT )\n" >> $FILE
+        if [ $PROJECT == roboVision ]
+            then
+                printf 'include_directories( include )\n' >> $FILE
+        fi
+        printf "set(OpenCV_DIR $OPENCV_LOCATION)\n" >> $FILE
+        printf 'find_package( OpenCV REQUIRED )\n' >> $FILE
+        printf "add_executable( $PROJECT ${SOURCES} )\n" >> $FILE
+        printf "add_definitions(-std=c++0x)\n" >> $FILE
+        printf "target_link_libraries( $PROJECT" >> $FILE
+        printf ' ${OpenCV_LIBS} )\n'  >> $FILE
 fi

@@ -8,6 +8,7 @@ using namespace std;
 
 class Hand {
     public:
+        Hand();
         Hand(vector<Point> contour, vector<int> convexIndexes, vector<Vec4i> defects);
         
         vector<Point> getFingertips(Mat = Mat());

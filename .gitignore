@@ -5,7 +5,7 @@ lib/*
 
 # ignore executables
 bin/*
-*/roboVision
+roboVision
 
 # ignore Mac-specific file stuff:
 .DS_Store
@@ -13,4 +13,6 @@ bin/*
 # ignore Cmake stuff:
 **/CMakeFiles
 **/Makefile
+**/CMakeLists.txt
 CMakeCache.txt
+*.cmake

@@ -1,3 +1,0 @@
-/home/pi/RoboVision/CMakeFiles/edit_cache.dir
-/home/pi/RoboVision/CMakeFiles/rebuild_cache.dir
-/home/pi/RoboVision/CMakeFiles/roboVision.dir
