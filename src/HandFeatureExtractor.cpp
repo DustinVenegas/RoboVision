@@ -48,6 +48,9 @@ bool HandFeatureExtractor::detect(Mat image) {
                                  convexDefects);
             _validHand = true;
             return true;
+        } else {
+            // now's a good time to clear old data
+            _hand = Hand();
         }
         return false;
     } else {

@@ -17,7 +17,7 @@ RUN git clone https://github.com/opencv/opencv.git; cd opencv && \
 WORKDIR /app
 ADD . /app
 RUN cd  /app/build && \
-    ./makeCMakeLists.sh roboVision && \
+    ./makeCMakeLists.sh -r && \
     cmake -D CMAKE_INSTALL_PREFIX=/opencv/release .. && \
     make
 

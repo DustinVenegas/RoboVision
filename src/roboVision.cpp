@@ -38,7 +38,10 @@ int main(int argc, char** argv) {
     for (;;) {
         cap >> rawImage;
         handFeatExt = HandFeatureExtractor();
-        handFeatExt.detect(rawImage);
+        if (handFeatExt.detect(rawImage)) {
+            // TODO: something useful?
+            printf("Found a hand!");
+        }
                 
         if (waitKey(30) == 27) {
             return 0;
