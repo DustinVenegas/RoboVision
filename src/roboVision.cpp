@@ -15,6 +15,7 @@ using namespace cv;
 Mat rawImage;
 HandFeatureExtractor handFeatExt;
 bool debugFlag = false;
+bool testFlag = false;
 const char* windowName = "RoboVision";
 
 // Method Headers:
@@ -23,18 +24,20 @@ void parseFlags(int argc, char** argv);
 // MAIN LOOP
 int main(int argc, char** argv) {
     parseFlags(argc, argv);
-    VideoCapture cap(0);
+    namedWindow(windowName, WINDOW_AUTOSIZE);
+    
+    //flag-specific setup
+    if (debugFlag) {   
+        VideoCapture cap(0);
 
-    if (!cap.isOpened()) {
-        printf("Camera not operational\n");
-        return -1;
+        if (!cap.isOpened()) {
+            printf("Camera not operational\n");
+            return -1;
+        }
+        printf("Camera operational\n");
     }
-    printf("Camera operational\n");
 
-    if (debugFlag) {
-        namedWindow(windowName, WINDOW_AUTOSIZE);
-    }
-
+    //main loop
     for (;;) {
         cap >> rawImage;
         handFeatExt = HandFeatureExtractor();
@@ -56,6 +59,9 @@ void parseFlags(int argc, char** argv) {
             case 'd':
                 debugFlag = true;
                 break;
+            case 't':
+                testFlag = true;
+                break
             default:
                 //TODO: something, maybe? IDK.
                 break;
