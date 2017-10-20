@@ -20,7 +20,7 @@ const char* windowName = "RoboVision";
 
 // Method Headers:
 void parseFlags(int argc, char** argv);
-
+void testloop(char** filePath);
 // MAIN LOOP
 int main(int argc, char** argv) {
     parseFlags(argc, argv);
@@ -66,6 +66,15 @@ void parseFlags(int argc, char** argv) {
                 //TODO: something, maybe? IDK.
                 break;
         }
+    }
+}
+
+void testLoop(char** filePath) {
+    Mat image = imread(filepath, 1);
+     handFeatExt = HandFeatureExtractor();
+    if (handFeatExt.detect(rawImage)) {
+        // TODO: something useful?
+        printf("Found a hand!");
     }
 }
 
