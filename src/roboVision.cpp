@@ -2,6 +2,7 @@
 
 #include <opencv2/opencv.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/highgui/highgui.hpp>
 #include <ctype.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -24,7 +25,8 @@ const char* windowName = "RoboVision";
 
 // Method Headers:
 void parseFlags(int argc, char** argv);
-void testloop(char** filePath);
+void debugLoop();
+void testLoop(char* filePath);
 int isFile(const char* name);
 // MAIN LOOP
 int main(int argc, char** argv) {
@@ -33,28 +35,9 @@ int main(int argc, char** argv) {
     
     //flag-specific setup
     if (debugFlag) {   
-       
-    }
-
-    //main loop
-    for (;;) {
-        VideoCapture cap(0);
-
-        if (!cap.isOpened()) {
-            printf("Camera not operational\n");
-            return -1;
-        }
-        printf("Camera operational\n");
-        cap >> rawImage;
-        handFeatExt = HandFeatureExtractor();
-        if (handFeatExt.detect(rawImage)) {
-            // TODO: something useful?
-            printf("Found a hand!");
-        }
-                
-        if (waitKey(30) == 27) {
-            return 0;
-        }
+      debugLoop(); 
+    } else if (testFlag) {
+      testLoop(_testPath);
     }
 }
 
@@ -80,12 +63,35 @@ void parseFlags(int argc, char** argv) {
     }
 }
 
-void testLoop(const char* path) {
+void debugLoop() {
+    VideoCapture cap(0);
+
+    if (!cap.isOpened()) {
+        printf("Camera not operational\n");
+        exit (EXIT_FAILURE);
+    }
+    printf("Camera operational\n");
+    
+    for (;;) {    
+        cap >> rawImage;
+        handFeatExt = HandFeatureExtractor();
+        if (handFeatExt.detect(rawImage)) {
+            // TODO: something useful?
+            printf("Found a hand!");
+        }
+                
+        if (waitKey(30) == 27) {
+            exit (0);
+        }
+    }
+}
+
+void testLoop(char* path) {
     int step = isFile(path);
     fprintf(stdout, "testing file: %s\n", path);
     switch (step) {
         case  1: {
-            Mat image = imread(path, 1);
+            Mat image = imread(path, CV_LOAD_IMAGE_COLOR);
             handFeatExt = HandFeatureExtractor();
             if (handFeatExt.detect(image)) {
                 // TODO: something useful?
@@ -97,12 +103,14 @@ void testLoop(const char* path) {
             DIR *dir = opendir(path);
             struct dirent *ent;
             while ((ent = readdir (dir)) != NULL) {
-                Mat image = imread(ent);
-                handFeatExt = HandFeatureExtractor();
-                if (handFeatExt.detect(image)) {
+                char fileChar = ent->d_name[256];
+                fprintf(stdout, "fileChar: %s\n", fileChar);
+                // Mat image = imread(fileChar, CV_LOAD_IMAGE_COLOR);
+                //handFeatExt = HandFeatureExtractor();
+                //if (handFeatExt.detect(image)) {
                     // TODO: something useful?
-                    printf("Found a hand!");
-                }
+                //    printf("Found a hand!");
+                //}
             }
             closedir(dir);
         }
