@@ -28,6 +28,8 @@ void parseFlags(int argc, char** argv);
 void debugLoop();
 void testLoop(char* filePath);
 int isFile(const char* name);
+vector<string> getFileNames(char* path);
+
 // MAIN LOOP
 int main(int argc, char** argv) {
     parseFlags(argc, argv);
@@ -87,8 +89,8 @@ void debugLoop() {
 }
 
 void testLoop(char* path) {
-    int step = isFile(path);
     fprintf(stdout, "testing file: %s\n", path);
+    int step = isFile(path);
     switch (step) {
         case  1: {
             Mat image = imread(path, CV_LOAD_IMAGE_COLOR);
@@ -100,19 +102,21 @@ void testLoop(char* path) {
         }
         break; 
         case 0: {
-            DIR *dir = opendir(path);
-            struct dirent *ent;
-            while ((ent = readdir (dir)) != NULL) {
-                char fileChar = ent->d_name[256];
-                fprintf(stdout, "fileChar: %s\n", fileChar);
+            fprintf(stdout, "iterating through directory %s:\n", path);
+            vector<string> fileList = getFileNames(path);
+            for (unsigned int i = 0; i < fileList.size(); i++) {
+                string fileStr = fileList[i];
+                fprintf(stdout, "file: %s\n", fileStr.c_str());
+            }
+
                 // Mat image = imread(fileChar, CV_LOAD_IMAGE_COLOR);
                 //handFeatExt = HandFeatureExtractor();
                 //if (handFeatExt.detect(image)) {
                     // TODO: something useful?
                 //    printf("Found a hand!");
                 //}
-            }
-            closedir(dir);
+           // }
+            //closedir(dir);
         }
         break;
         default: {
@@ -133,5 +137,22 @@ int isFile(const char* name) {
         return 1;
     }
     return -1;
+}
+
+vector<string> getFileNames(char* path) {
+    vector<string> fileNames;
+    DIR *dir = opendir(path);
+    struct dirent *ent;
+    string fileStr;
+    while ((ent = readdir (dir)) != NULL) {
+        fileStr = ent->d_name;
+        if (isFile(fileStr.c_str()) == 1) {
+            fileNames.push_back(fileStr);
+        } else {
+            //DEBUGGING
+            fprintf(stdout, "%s is not a regular file, skipping\n", fileStr.c_str());
+        }
+    }
+    return fileNames;
 }
 
