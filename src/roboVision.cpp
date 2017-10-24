@@ -108,17 +108,15 @@ void testLoop(char* path) {
             vector<string> fileList = getFileNames(path);
             for (unsigned int i = 0; i < fileList.size(); i++) {
                 string fileStr = fileList[i];
-                fprintf(stdout, "file: %s\n", fileStr.c_str());
-            }
+                fprintf(stdout, "Checking file: %s\n", fileStr.c_str());
 
-                // Mat image = imread(fileChar, CV_LOAD_IMAGE_COLOR);
-                //handFeatExt = HandFeatureExtractor();
-                //if (handFeatExt.detect(image)) {
+                Mat image = imread(fileStr, CV_LOAD_IMAGE_COLOR);
+                handFeatExt = HandFeatureExtractor();
+                if (handFeatExt.detect(image)) {
                     // TODO: something useful?
-                //    printf("Found a hand!");
-                //}
-           // }
-            //closedir(dir);
+                    printf("Found a hand!\n");
+                }
+            }
         }
         break;
         default: {
@@ -159,6 +157,7 @@ vector<string> getFileNames(char* path) {
             fprintf(stdout, "%s is not a regular file, skipping\n", fileStr);
         }
     }
+    closedir(dir);
     return fileNames;
 }
 
