@@ -106,6 +106,8 @@ void testLoop(char* path) {
             printf("Argument is a directory. Iterating . . .\n");
             fprintf(stdout, "iterating through directory %s:\n", path);
             vector<string> fileList = getFileNames(path);
+            int total = fileList.size();
+            int positives = 0;
             for (unsigned int i = 0; i < fileList.size(); i++) {
                 string fileStr = fileList[i];
                 fprintf(stdout, "Checking file: %s\n", fileStr.c_str());
@@ -113,10 +115,12 @@ void testLoop(char* path) {
                 Mat image = imread(fileStr, CV_LOAD_IMAGE_COLOR);
                 handFeatExt = HandFeatureExtractor();
                 if (handFeatExt.detect(image)) {
-                    // TODO: something useful?
+                    positives++;
                     printf("Found a hand!\n");
                 }
             }
+            printf("number of samples: %d\n", total);
+            printf("number of positive matches: %d\n", positives);
         }
         break;
         default: {
