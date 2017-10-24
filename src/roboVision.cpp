@@ -27,7 +27,7 @@ const char* windowName = "RoboVision";
 void parseFlags(int argc, char** argv);
 void debugLoop();
 void testLoop(char* filePath);
-int isFile(const char* name);
+int isFile(char* name);
 vector<string> getFileNames(char* path);
 
 // MAIN LOOP
@@ -89,19 +89,21 @@ void debugLoop() {
 }
 
 void testLoop(char* path) {
-    fprintf(stdout, "testing file: %s\n", path);
+    fprintf(stdout, "RoboVision initialized in test mode with argument: %s\n\n", path);
     int step = isFile(path);
     switch (step) {
         case  1: {
+            printf("Argument is a file . . . ");
             Mat image = imread(path, CV_LOAD_IMAGE_COLOR);
             handFeatExt = HandFeatureExtractor();
             if (handFeatExt.detect(image)) {
                 // TODO: something useful?
-                    printf("Found a hand!");
+                    printf("Found a hand!\n");
             }
         }
         break; 
         case 0: {
+            printf("Argument is a directory. Iterating . . .\n");
             fprintf(stdout, "iterating through directory %s:\n", path);
             vector<string> fileList = getFileNames(path);
             for (unsigned int i = 0; i < fileList.size(); i++) {
@@ -126,9 +128,12 @@ void testLoop(char* path) {
     }
 }
 
-int isFile(const char* name) {
+int isFile( char* name) {
+    fprintf(stdout, "isFile: checking path: %s . . .\n", name);
     struct stat path_stat;
     stat(name, &path_stat);
+    
+    //fprintf(stdout, "isFile: file is of type %s\n", path_stat.st_mode);
     if (S_ISDIR(path_stat.st_mode)) {
         // folder:
         return 0;
@@ -143,14 +148,15 @@ vector<string> getFileNames(char* path) {
     vector<string> fileNames;
     DIR *dir = opendir(path);
     struct dirent *ent;
-    string fileStr;
+    char* fileStr;
     while ((ent = readdir (dir)) != NULL) {
-        fileStr = ent->d_name;
-        if (isFile(fileStr.c_str()) == 1) {
+        strcpy(fileStr, path);
+        strcat(fileStr, ent->d_name);
+        if (isFile(fileStr) == 1) {
             fileNames.push_back(fileStr);
         } else {
             //DEBUGGING
-            fprintf(stdout, "%s is not a regular file, skipping\n", fileStr.c_str());
+            fprintf(stdout, "%s is not a regular file, skipping\n", fileStr);
         }
     }
     return fileNames;
