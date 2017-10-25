@@ -73,10 +73,10 @@ void debugLoop() {
         exit (EXIT_FAILURE);
     }
     printf("Camera operational\n");
-    
+    handFeatExt = HandFeatureExtractor();
     for (;;) {    
         cap >> rawImage;
-        handFeatExt = HandFeatureExtractor();
+        imshow(windowName, rawImage);
         if (handFeatExt.detect(rawImage)) {
             // TODO: something useful?
             printf("Found a hand!");
