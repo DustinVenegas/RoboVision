@@ -22,7 +22,6 @@ bool debugFlag = false;
 bool testFlag = false;
 char* _testPath = NULL;
 const char* windowName = "RoboVision";
-int _deviceIndex = 0;
 
 // Method Headers:
 void parseFlags(int argc, char** argv);
@@ -46,11 +45,8 @@ int main(int argc, char** argv) {
 
 void parseFlags(int argc, char** argv) {
     int args = 0;
-    while ((args = getopt(argc, argv, "c:dt:")) != -1) {
+    while ((args = getopt(argc, argv, "dt:")) != -1) {
         switch(args) {
-            case 'c':
-                _deviceIndex = optarg;
-                break;
             case 'd':
                 debugFlag = true;
                 break;
@@ -70,7 +66,7 @@ void parseFlags(int argc, char** argv) {
 }
 
 void debugLoop() {
-    VideoCapture cap(_deviceIndex);
+    VideoCapture cap(0);
 
     if (!cap.isOpened()) {
         printf("Camera not operational\n");
