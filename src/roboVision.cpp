@@ -76,12 +76,12 @@ void debugLoop() {
     handFeatExt = HandFeatureExtractor();
     for (;;) {    
         cap >> rawImage;
-        imshow(windowName, rawImage);
         if (handFeatExt.detect(rawImage)) {
             // TODO: something useful?
-            printf("Found a hand!");
+            printf("Found a hand!\n");
+            handFeatExt.dump(rawImage);
         }
-                
+        imshow(windowName, rawImage);
         if (waitKey(30) == 27) {
             exit (0);
         }
