@@ -11,11 +11,12 @@
 #include <dirent.h>
 #include "RoboVision/Hand.h"
 #include "RoboVision/HandFeatureExtractor.h"
+#include "RoboVision/ImageCollector.h"
 
 using namespace std;
 using namespace cv;
 
-// Global Variables(I know, too many):
+// Global Variables
 Mat rawImage;
 HandFeatureExtractor handFeatExt;
 bool debugFlag = false;
@@ -29,6 +30,7 @@ void debugLoop();
 void testLoop(char* filePath);
 int isFile(char* name);
 vector<string> getFileNames(char* path);
+void printHelp();
 
 // MAIN LOOP
 int main(int argc, char** argv) {
@@ -45,21 +47,36 @@ int main(int argc, char** argv) {
 
 void parseFlags(int argc, char** argv) {
     int args = 0;
-    while ((args = getopt(argc, argv, "dt:")) != -1) {
+    while ((args = getopt(argc, argv, "c:dt:")) != -1) {
         switch(args) {
-            case 'd':
+            // collect sample images
+            case 'c': {
+                string arg = string(optarg);
+                if (arg.size() > 0) {
+                    ImageCollector collector = ImageCollector();
+                    collector.collectorLoop(string(optarg));
+                } else {
+                    fprintf(stderr, "ERROR: '%s' is not a valid file path\n", optarg);
+                }
+                break;
+            }
+            // run in debug mode
+            case 'd': {
                 debugFlag = true;
                 break;
-            case 't':
+            }
+            // run tests;
+            case 't': 
                 testFlag = true;
                 _testPath = optarg;
                 break;
             case '?':
                 if (optopt == 't') {
                     fprintf(stderr, "Unknown option: %s\n", optopt);
+                    printHelp();
                 }
             default:
-                //TODO: something, maybe? IDK.
+                printHelp();
                 break;
         }
     }
@@ -165,3 +182,9 @@ vector<string> getFileNames(char* path) {
     return fileNames;
 }
 
+void printHelp() {
+    printf("supported parameters:\n");
+    printf(" -d                  debug mode\n");
+    printf(" -t <file/dir path>  test mode\n");
+    printf(" -c <name>           collect training images\n");
+}
