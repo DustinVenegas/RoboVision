@@ -125,10 +125,9 @@ void testLoop(char* path) {
             vector<string> fileList = getFileNames(path);
             int total = fileList.size();
             int positives = 0;
-            for (unsigned int i = 0; i < fileList.size(); i++) {
+            for(unsigned int i = 0; i < fileList.size(); i++) {
                 string fileStr = fileList[i];
-                fprintf(stdout, "Checking file: %s\n", fileStr.c_str());
-
+                fprintf(stdout, "testLoop:: Checking file: %s\n", fileStr.c_str());
                 Mat image = imread(fileStr, CV_LOAD_IMAGE_COLOR);
                 handFeatExt = HandFeatureExtractor();
                 if (handFeatExt.detect(image)) {
@@ -148,11 +147,10 @@ void testLoop(char* path) {
 }
 
 int isFile( char* name) {
-    fprintf(stdout, "isFile: checking path: %s . . .\n", name);
+    fprintf(stdout, "isFile:: checking path: %s . . .\n", name);
     struct stat path_stat;
     stat(name, &path_stat);
     
-    //fprintf(stdout, "isFile: file is of type %s\n", path_stat.st_mode);
     if (S_ISDIR(path_stat.st_mode)) {
         // folder:
         return 0;
@@ -169,13 +167,14 @@ vector<string> getFileNames(char* path) {
     struct dirent *ent;
     char* fileStr;
     while ((ent = readdir (dir)) != NULL) {
+        char* fileName = ent->d_name;
         strcpy(fileStr, path);
-        strcat(fileStr, ent->d_name);
-        if (isFile(fileStr) == 1) {
+        strcat(fileStr, fileName);
+        if ((isFile(fileStr) == 1) && (fileName[0] != '.')) {
             fileNames.push_back(fileStr);
         } else {
             //DEBUGGING
-            fprintf(stdout, "%s is not a regular file, skipping\n", fileStr);
+            fprintf(stdout, "getFileNames:: %s is not a regular file, skipping\n", fileStr);
         }
     }
     closedir(dir);
