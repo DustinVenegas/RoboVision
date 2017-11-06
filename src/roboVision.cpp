@@ -7,8 +7,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/types.h>
-#include <sys/stat.h>
-#include <dirent.h>
+#include "RoboVision/CategoryTester.h"
 #include "RoboVision/Hand.h"
 #include "RoboVision/HandFeatureExtractor.h"
 #include "RoboVision/ImageCollector.h"
@@ -21,14 +20,14 @@ Mat rawImage;
 HandFeatureExtractor handFeatExt;
 bool debugFlag = false;
 bool testFlag = false;
-char* _testPath = NULL;
+char* _testPath1 = NULL;
+char* _testPath2 = NULL;
 const char* windowName = "RoboVision";
 
 // Method Headers:
 void parseFlags(int argc, char** argv);
 void debugLoop();
-void testLoop(char* filePath);
-int isFile(char* name);
+void testLoop(char* filePath1, char* filePath2);
 vector<string> getFileNames(char* path);
 void printHelp();
 
@@ -41,13 +40,13 @@ int main(int argc, char** argv) {
     if (debugFlag) {   
       debugLoop(); 
     } else if (testFlag) {
-      testLoop(_testPath);
+      testLoop(_testPath1, _testPath2);
     }
 }
 
 void parseFlags(int argc, char** argv) {
     int args = 0;
-    while ((args = getopt(argc, argv, "c:dt:")) != -1) {
+    while ((args = getopt(argc, argv, "c:dn:t:")) != -1) {
         switch(args) {
             // collect sample images
             case 'c': {
@@ -65,16 +64,20 @@ void parseFlags(int argc, char** argv) {
                 debugFlag = true;
                 break;
             }
+            // add negative samples to test
+            case 'n': {
+                _testPath2 = optarg;
+                break;
+            }
             // run tests;
-            case 't': 
+            case 't': {
                 testFlag = true;
-                _testPath = optarg;
+                _testPath1 = optarg;
+            }
                 break;
             case '?':
-                if (optopt == 't') {
-                    fprintf(stderr, "Unknown option: %s\n", optopt);
-                    printHelp();
-                }
+                fprintf(stderr, "Unknown option: %s\n", args);
+                printHelp();
             default:
                 printHelp();
                 break;
@@ -105,80 +108,16 @@ void debugLoop() {
     }
 }
 
-void testLoop(char* path) {
-    fprintf(stdout, "RoboVision initialized in test mode with argument: %s\n\n", path);
-    int step = isFile(path);
-    switch (step) {
-        case  1: {
-            printf("Argument is a file . . . ");
-            Mat image = imread(path, CV_LOAD_IMAGE_COLOR);
-            handFeatExt = HandFeatureExtractor();
-            if (handFeatExt.detect(image)) {
-                // TODO: something useful?
-                    printf("Found a hand!\n");
-            }
-        }
-        break; 
-        case 0: {
-            printf("Argument is a directory. Iterating . . .\n");
-            fprintf(stdout, "iterating through directory %s:\n", path);
-            vector<string> fileList = getFileNames(path);
-            int total = fileList.size();
-            int positives = 0;
-            for(unsigned int i = 0; i < fileList.size(); i++) {
-                string fileStr = fileList[i];
-                fprintf(stdout, "testLoop:: Checking file: %s\n", fileStr.c_str());
-                Mat image = imread(fileStr, CV_LOAD_IMAGE_COLOR);
-                handFeatExt = HandFeatureExtractor();
-                if (handFeatExt.detect(image)) {
-                    positives++;
-                    printf("Found a hand!\n");
-                }
-            }
-            printf("number of samples: %d\n", total);
-            printf("number of positive matches: %d\n", positives);
-        }
-        break;
-        default: {
-            printf("invalid filepath");
-        }
-        break;
+void testLoop(char* filePath1, char* filePath2) {
+    printf("RoboVision initialized in test mode with positive sample path: %s\n", filePath1);
+    CategoryTester tester = CategoryTester();
+    if ((filePath1 != NULL) & (filePath2 != NULL)) {
+        printf("Negative sample path: %s\n", filePath2);
+        tester.test(filePath1, filePath2);
     }
-}
-
-int isFile( char* name) {
-    fprintf(stdout, "isFile:: checking path: %s . . .\n", name);
-    struct stat path_stat;
-    stat(name, &path_stat);
-    
-    if (S_ISDIR(path_stat.st_mode)) {
-        // folder:
-        return 0;
-    } else if (S_ISREG(path_stat.st_mode)) {
-        // regular file:
-        return 1;
-    }
-    return -1;
-}
-
-vector<string> getFileNames(char* path) {
-    vector<string> fileNames;
-    DIR *dir = opendir(path);
-    struct dirent *ent;
-    char* fileStr;
-    while ((ent = readdir (dir)) != NULL) {
-        char* fileName = ent->d_name;
-        strcpy(fileStr, path);
-        strcat(fileStr, fileName);
-        if ((isFile(fileStr) == 1) && (fileName[0] != '.')) {
-            fileNames.push_back(fileStr);
-        } else {
-            //DEBUGGING
-            fprintf(stdout, "getFileNames:: %s is not a regular file, skipping\n", fileStr);
-        }
-    }
-    closedir(dir);
-    return fileNames;
+    else if (filePath1 != NULL) {
+        tester.test(filePath1);
+    } 
 }
 
 void printHelp() {
