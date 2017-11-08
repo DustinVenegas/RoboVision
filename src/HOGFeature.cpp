@@ -15,5 +15,5 @@ Mat HOGFeature::extract(Mat mat) {
 }
 
 void HOGFeature::preProcess(Mat mat) {
-
+    //TODO: resize image to standard dimensions
 }
