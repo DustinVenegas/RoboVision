@@ -7,12 +7,13 @@ using namespace cv;
 
 class HOGFeature {
     public:
-        HOGFeature;
-        extract(Mat mat);
+        HOGFeature();
+        Mat extract(Mat mat);
 
     private:
         void preProcess(Mat mat);
-
-}
+        Mat deskew(Mat& img);
+        int _cellSize;
+};
 
 #endif
